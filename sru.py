@@ -18,7 +18,7 @@ def sru(input, initial_state=None, depth=1, dropout=0.2, recurrent_dropout=0.2, 
     dropped_ones = Dropout(recurrent_dropout)(ones)
     xfr = W(input_dropped)
     ixfrd = concatenate([input, xfr, dropped_ones])
-    ixfrd = Lambda(lambda x: x[0], mask=lambda x, _: x[1])([ixfrd, mask])
+    ixfrd = Lambda(lambda x: x[0], mask=lambda x, _: x[1], output_shape=lambda s: s[0])([ixfrd, mask])
     recurrent_input = Input((units * 5,))
     def unpack(x, n):
         return [Lambda(lambda x, i: x[:,units * i : units * (i + 1)], arguments={'i': i}, output_shape=lambda s: (s[0], units))(x) for i in range(n)]
